@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="tb_category")
@@ -21,7 +23,9 @@ public class Category implements Serializable {
 	private Long id;
 	private String name;
 	
-	@Transient // Impede que o JPA tente interpretar
+	@JsonIgnore
+	@ManyToMany(mappedBy = "categories")
+	// Nome da coleção que está fazendo o mapeamento
 	private Set<Product> products = new HashSet<>();
 	// Utilizar o set, para garantir que uma categoria não tenha a produto repetido
 	
