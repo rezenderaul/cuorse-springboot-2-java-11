@@ -35,6 +35,8 @@ public class Order implements Serializable {
 	private User client;
 	
 	@OneToMany(mappedBy = "id.order") // Um para muitos
+	// id vem da classe OrderItem, da variável OrderItemPK id
+	// order vem da classe OrderItemPK, da variável Order order
 	private Set<OrderItem> items = new HashSet<>();
 	
 	public Order() {
