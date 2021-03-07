@@ -24,4 +24,8 @@ public class UserService {
 		return obj.get();
 		// A operação get do Optional retorna, um objeto do tipo declarado
 	}
+	
+	public User insert(User obj) {
+		return repository.save(obj);
+	}
 }
