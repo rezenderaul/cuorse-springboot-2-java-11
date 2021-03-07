@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.raulrezende.course.entities.User;
 import com.raulrezende.course.repositories.UserRepository;
+import com.raulrezende.course.services.exceptions.DatabaseException;
 import com.raulrezende.course.services.exceptions.ResourceNotFoundException;
 
 @Service // Registra a classe como serviço do spring, podendo assim ser injetado automáticamente
@@ -23,7 +26,7 @@ public class UserService {
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
-		// A operação get do Optional retorna, um objeto do tipo declarado
+		// A operação orElseThrow tenta retornar um get, se não tiver um objeto, retorna uma exceção
 	}
 	
 	public User insert(User obj) {
@@ -31,7 +34,13 @@ public class UserService {
 	}
 	
 	public void delete(Long id) {
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 	
 	public User update(Long id, User obj) {
