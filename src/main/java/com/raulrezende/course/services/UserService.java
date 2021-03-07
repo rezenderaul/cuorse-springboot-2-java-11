@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.raulrezende.course.entities.User;
 import com.raulrezende.course.repositories.UserRepository;
+import com.raulrezende.course.services.exceptions.ResourceNotFoundException;
 
 @Service // Registra a classe como serviço do spring, podendo assim ser injetado automáticamente
 public class UserService {
@@ -21,7 +22,7 @@ public class UserService {
 	
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 		// A operação get do Optional retorna, um objeto do tipo declarado
 	}
 	
