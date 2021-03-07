@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,8 @@ public class UserResource {
 		return ResponseEntity.ok().body(list);
 	}
 	
-	@GetMapping(value="/{id}") // Indica que a requisição aceita um id na url
+	// Utiliza-se o método get para retornar dados do banco de dados
+	@GetMapping(value="/{id}") // Indica que a requisição aceita um variável/id na url
 	public ResponseEntity<User> findById(@PathVariable Long id) {
 		// @PathVariable indica que o parametro será passado por url
 		User obj = service.findById(id);
@@ -49,5 +51,14 @@ public class UserResource {
 		// Retorna uma uri do registro criado no banco de dados
 		return ResponseEntity.created(uri).body(obj);
 		// Retorna o resposta 201 com caminho para acessar o registro criado
+	}
+	
+	// Utiliza-se o método delete para deletar dados no banco de dados
+	@DeleteMapping(value="/{id}") // Indica que a requisição aceita um variável/id na url
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		// @PathVariable indica que o parametro será passado por url
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+		// Retorna o código http 204
 	}
 }
